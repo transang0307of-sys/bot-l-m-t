@@ -1,4 +1,4 @@
-const BOT_TOKEN = '7924007259:AAFE4-57EOX2lTYco_rX64kKffY4MlQ-ayg';
+const BOT_TOKEN = '7924007259:AAGOQrtIr6JUvTwo6A8ZOIh08KIJkRE4hsQ';
 const CHAT_ID = '-1004469272954';
 
 export default async function handler(req, res) {
